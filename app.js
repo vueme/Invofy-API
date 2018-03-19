@@ -8,6 +8,14 @@ if (process.env.NODE_ENV == 'production') {
 }
 
 /**
+ * Handles generic operations
+ * Available routes:
+ * [GET] /api/ - Generic API information
+ */
+const GenericController = require('./generic/GenericController');
+app.use('/api/', GenericController);
+
+/**
  * Handles authentication operations
  * Available routes:
  * [POST] /api/auth - Authorization
@@ -16,7 +24,9 @@ const AuthController = require('./auth/AuthController');
 app.use('/api/auth', AuthController);
 
 /**
- * [UserController description]
+ * Handles registration
+ * Available routes:
+ * [POST] /api/user - Registration
  */
 const UserController = require('./user/UserController');
 app.use('/api/user', UserController);
@@ -44,7 +54,7 @@ const InvoiceController = require('./invoice/InvoiceController');
 app.use('/api/invoice', InvoiceController);
 
 /**
- * Invalid JSON error handler
+ * Invalid JSON error handler/app-wide middleware
  */
 app.use(function (err, req, res, next) {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
