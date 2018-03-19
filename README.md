@@ -4,7 +4,7 @@ Simple API for creating invoices. Will be used together with one of my other pro
 
 ## Live Demo
 
-Live demo can be found on [https://invofy.maciejsiwek.com](https://invofy.maciejsiwek.com). 
+Live demo can be found on [http://www.invofy.maciejsiwek.com](http://www.invofy.maciejsiwek.com). 
 
 Feel free to log in with `demo` / `password` but please note that most of the functionality is not yet implemented on the client-side.
 
