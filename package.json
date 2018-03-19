@@ -2,6 +2,10 @@
   "name": "invoice-api",
   "version": "1.0.0",
   "author": "Maciej Siwek",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ms223iu/Invofy-API.git"
+  },
   "description": "Simple invoicing API",
   "main": "server.js",
   "scripts": {
