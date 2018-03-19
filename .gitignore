@@ -11,3 +11,4 @@ config.js
 *.ntvs*
 *.njsproj
 *.sln
+config.js

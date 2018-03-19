@@ -1,8 +1,8 @@
 var config = {
   production: {
     authorization: {
-      jwt_secret: '',
-      jwt_expiry: '12h'
+      jwt_secret: 'RandomLongSecretkeyLikePasswordOrAdmin',
+      jwt_expiry: '24h'
     },
     database: {
       string: ''
@@ -11,8 +11,8 @@ var config = {
 
   developement: {
     authorization: {
-      jwt_secret: '',
-      jwt_expiry: '12h'
+      jwt_secret: 'RandomLongSecretkeyLikePasswordOrAdmin',
+      jwt_expiry: '24h'
     },
     database: {
       string: ''
@@ -21,8 +21,8 @@ var config = {
 
   test: {
     authorization: {
-      jwt_secret: '',
-      jwt_expiry: '12h'
+      jwt_secret: 'RandomLongSecretkeyLikePasswordOrAdmin',
+      jwt_expiry: '24h'
     },
     database: {
       string: ''
