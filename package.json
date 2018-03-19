@@ -1,0 +1,25 @@
+{
+  "name": "invoice-api",
+  "version": "1.0.0",
+  "author": "Maciej Siwek",
+  "description": "Simple invoicing API",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha --timeout 10000",
+    "dev": "set NODE_ENV=developement&&nodemon server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.0",
+    "mongoose": "^5.0.10"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "mocha": "^5.0.4",
+    "supertest": "^3.0.0"
+  }
+}
