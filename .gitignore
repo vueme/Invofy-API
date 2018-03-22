@@ -3,7 +3,6 @@ node_modules/
 npm-debug.log
 yarn-error.log
 .jshintrc
-config.js
 
 # Editor directories and files
 .idea
@@ -12,3 +11,4 @@ config.js
 *.njsproj
 *.sln
 config.js
+tests/
