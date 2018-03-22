@@ -9,7 +9,7 @@ Live demo can be found on [https://invofy.maciejsiwek.com/api](https://invofy.ma
 ## Running on local machine
  1. Rename `config.example.js` to `config.js`
  2. Add the MongoDB connection string to `config.js`
- 3. Run `npm install` & `npm run dev`
+ 3. Run `npm install` & `node server.js`
  4. Profit!
 
 ## Stack
