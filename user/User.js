@@ -25,6 +25,11 @@ const UserSchema = new Schema({
     maxlength: 100
   },
 
+  createdon: {
+    type: Date,
+    default: Date.now
+  },
+
   addresses: [Address.schema],
   invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }]
 },
