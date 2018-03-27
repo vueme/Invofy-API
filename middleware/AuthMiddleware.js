@@ -21,6 +21,7 @@ router.use(function (req, res, next) {
 
     // Pass user ID to the next route and continue execution
     res.locals.userId = decoded.sub;
+    req.body.owner = decoded.sub;
     next();
   });
 });
