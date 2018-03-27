@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Address = require('../address/Address');
 
 const UserSchema = new Schema({
   email: {
@@ -30,7 +29,7 @@ const UserSchema = new Schema({
     default: Date.now
   },
 
-  addresses: [Address.schema],
+  addresses: [{ type: Schema.Types.ObjectId, ref: 'Address' }],
   invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }]
 },
   {
