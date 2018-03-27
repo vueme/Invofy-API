@@ -3,6 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const isAuthorized = require('../middleware/AuthMiddleware');
 const User = require('../user/User');
+const Address = require('../address/Address');
 
 router.use(bodyParser.json());
 
@@ -12,58 +13,48 @@ router.use(bodyParser.json());
  * @return Object of addresses
  */
 router.get('/', isAuthorized, function (req, res) {
-  User.findById(res.locals.userId, 'addresses -_id', function (err, obj) {
-    // Internal error
-    if (err) return res.status(500).send();
 
-    // No addresses were found
-    if (obj.addresses.length == 0) return res.status(404).json({ "error": "You have no addresses" });
+  Address.find({ owner: res.locals.userId }, 'number customer items', function (err, obj) {
 
-    return res.status(200).send(obj.addresses);
+    if (err) return res.status(500).json({ "error": "Something went wrong" });
+    if (!obj) return res.status(404).json({ "error": "No invoices were found" });
+
+    return res.status(200).send(obj);
   });
+
 });
 
 /**
  * [ PROTECTED ]
  * Creates new address
- * @param "name" in POST-body
- * @param "address" in POST-body
+ * @TODO: Add params when model is done
  */
 router.post('/', isAuthorized, function (req, res) {
-  User.findByIdAndUpdate(res.locals.userId, { $addToSet: { 'addresses': { 'name': req.body.name, 'address': req.body.address } } },
-    { new: true, runValidators: true }, function (err, obj) {
+  Address.create(req.body, function (err, address) {
+    // Validation error
+    if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
+    // Internal error
+    if (err) return res.status(500).json({ "error": "Something went wrong" });
 
-      // Validation error
-      if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
-      // Internal error
-      if (err) return res.status(500).send();
-
-      // Return all addresses
-      return res.status(200).send(obj.addresses);
-    });
+    return res.status(200).send(address);
+  });
 });
 
 /**
  * [ PROTECTED ]
  * Updates an address
- * @param "name" in PUT-body
- * @param "address" in PUT-body
+ * @TODO: Add params when model is done
  */
 router.put('/:id', isAuthorized, function (req, res) {
-  // Find the record and update it
-  User.findOneAndUpdate({ _id: res.locals.userId, 'addresses.id': req.params.id }, {
-    $set: { "addresses.$.name": req.body.name, "addresses.$.address": req.body.address }
-  },
-    { new: true, runValidators: true }, function (err, obj) {
+  Address.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId }, req.body, { runValidators: true, new: true }, function (err, address) {
+    // Validation error
+    if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
 
-      // Validation error
-      if (err && err.name == "ValidationError") return res.status(400).json(err.message);
+    // Internal error
+    if (err) return res.status(500).send();
 
-      // Internal error
-      if (err) return res.status(500).send();
-
-      return res.status(200).send(obj.addresses);
-    });
+    return res.status(200).send(address);
+  });
 });
 
 /**
@@ -72,14 +63,11 @@ router.put('/:id', isAuthorized, function (req, res) {
  * @param "id" in URI
  */
 router.delete('/:id', isAuthorized, function (req, res) {
-  // Deletes an address using its ID
-  User.findByIdAndUpdate(res.locals.userId, { $pull: { addresses: { _id: req.params.id } } }, { new: true }, function (err, obj) {
 
-    // Internal error
-    if (err) return res.status(500).json({ "error": "Something went wrong" });
+  Address.findOneAndRemove({ _id: req.params.id, owner: res.locals.userId }, { select: 'owner' }, function (err, address) {
+    if (err || !address) return res.status(500).send();
 
-    // Returns new addresses
-    return res.status(200).send(obj.addresses);
+    return res.status(200).send();
   });
 });
 
