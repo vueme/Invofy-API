@@ -17,7 +17,7 @@ router.get('/', isAuthorized, function (req, res) {
   Address.find({ owner: res.locals.userId }, function (err, obj) {
 
     if (err) return res.status(500).json({ "error": "Something went wrong" });
-    if (!obj) return res.status(404).json({ "error": "No invoices were found" });
+    if (!obj) return res.status(404).json({ "error": "No address was found" });
 
     return res.status(200).send(obj);
   });
@@ -31,6 +31,8 @@ router.get('/', isAuthorized, function (req, res) {
  */
 router.post('/', isAuthorized, function (req, res) {
   Address.create(req.body, function (err, address) {
+    // Duplicate
+    if (err && err.code == 11000) return res.status(409).send({ 'error': 'Address with that display name already exists' });
     // Validation error
     if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
     // Internal error

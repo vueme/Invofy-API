@@ -6,6 +6,7 @@ const User = require('../user/User');
 const AddressSchema = new Schema({
   displayName: {
     type: String,
+    unique: true,
     required: true
   },
 
