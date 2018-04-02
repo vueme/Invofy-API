@@ -49,9 +49,10 @@ router.post('/', isAuthorized, function (req, res) {
  */
 router.put('/:id', isAuthorized, function (req, res) {
   Address.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId }, req.body, { runValidators: true, new: true }, function (err, address) {
+    // Duplicate
+    if (err && err.code == 11000) return res.status(409).send({ 'error': 'Address with that display name already exists' });
     // Validation error
     if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
-
     // Internal error
     if (err) return res.status(500).send();
 
