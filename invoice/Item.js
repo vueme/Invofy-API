@@ -4,32 +4,26 @@ const Schema = mongoose.Schema;
 const ItemSchema = new Schema({
   description: {
     type: String,
-    minlength: 1,
-    maxlength: 50,
-    required: true,
-    default: ''
+    required: true
   },
 
   amount: {
     type: Number,
-    required: true,
-    default: ''
+    required: true
   },
 
   price: {
     type: Number,
-    required: true,
-    default: ''
+    required: true
   },
 
   sum: {
     type: Number,
-    required: true,
-    default: ''
+    required: true
   },
-  _id: false,
 },
   {
+    _id: false,
     versionKey: false
   });
 
