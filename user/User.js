@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const Company = require('../company/Company');
+
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -20,11 +22,11 @@ const UserSchema = new Schema({
   },
 
   company: {
-    type: String,
-    maxlength: 100
+    type: Company.schema,
+    default: {}
   },
 
-  created: {
+  created_at: {
     type: Date,
     default: Date.now
   },
