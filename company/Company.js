@@ -36,7 +36,7 @@ const CompanySchema = new Schema({
     required: true
   },
 
-  owner: {
+  holder: {
     type: String,
     default: 'Demo Demos',
     required: true

@@ -24,17 +24,15 @@ router.get('/', isAuthorized, function (req, res) {
  * [ PROTECTED ]
  * Updates company object
  */
-/*
 router.put('/', isAuthorized, function (req, res) {
-  Address.findOneAndUpdate(res.locals.userId, req.body, { runValidators: true, new: true }, function (err, address) {
-
+  User.findByIdAndUpdate(res.locals.userId, { $set: { company: req.body } }, { new: true }, function (err, obj) {
     // Validation error
     if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
     // Internal error
     if (err) return res.status(500).send();
 
-    return res.status(200).send(address);
+    return res.status(200).send();
   });
 });
-*/
+
 module.exports = router;
