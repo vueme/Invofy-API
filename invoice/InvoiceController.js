@@ -33,16 +33,7 @@ router.get('/', isAuthorized, function (req, res) {
  * @param "items" in body 
  */
 router.post('/', isAuthorized, function (req, res) {
-
-  const invoice = new Invoice({
-    _id: new mongoose.Types.ObjectId(),
-    number: req.body.number,
-    customer: req.body.customer,
-    owner: res.locals.userId,
-    items: req.body.items
-  });
-
-  invoice.save(function (err) {
+  Invoice.create(req.body, function (err, invoice) {
     // Validation error
     if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
     // Internal error

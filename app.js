@@ -43,6 +43,14 @@ const AddressController = require('./address/AddressController');
 app.use('/api/address', AddressController);
 
 /**
+ * Handles company operations
+ * Available routes:
+ * [GET] /api/company - Gets company info
+ */
+const CompanyController = require('./company/CompanyController');
+app.use('/api/company', CompanyController);
+
+/**
  * Handles invoice operations
  * Available routes:
  * [GET] /api/invoice -
