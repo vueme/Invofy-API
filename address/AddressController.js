@@ -14,7 +14,7 @@ router.use(bodyParser.json());
  */
 router.get('/', isAuthorized, function (req, res) {
 
-  Address.find({ owner: res.locals.userId }, function (err, obj) {
+  Address.find({ owner: res.locals.userId }, '-owner', function (err, obj) {
 
     if (err) return res.status(500).json({ "error": "Something went wrong" });
     if (!obj) return res.status(404).json({ "error": "No address was found" });
