@@ -16,6 +16,11 @@ const InvoiceSchema = new Schema({
     required: true
   },
 
+  date: {
+    type: Date,
+    default: Date.now
+  },
+
   owner: {
     type: String,
     required: true
@@ -25,11 +30,6 @@ const InvoiceSchema = new Schema({
     type: [Item.schema],
     validate: [hasAtLeastOneItem, 'needs to contain at least one object'],
     required: true
-  },
-
-  created: {
-    type: Date,
-    default: Date.now
   }
 }, {
     versionKey: false

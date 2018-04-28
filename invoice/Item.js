@@ -15,12 +15,7 @@ const ItemSchema = new Schema({
   price: {
     type: Number,
     required: true
-  },
-
-  sum: {
-    type: Number,
-    required: true
-  },
+  }
 },
   {
     _id: false,

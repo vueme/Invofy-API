@@ -6,7 +6,7 @@ const isAuthorized = require('../middleware/AuthMiddleware');
 
 router.use(bodyParser.json());
 
-const User = require('../user/User');
+const Address = require('../address/Address');
 const Invoice = require('../invoice/Invoice');
 
 /**
@@ -14,11 +14,10 @@ const Invoice = require('../invoice/Invoice');
  * Gets invoices of the authorized user
  */
 router.get('/', isAuthorized, function (req, res) {
+  Invoice.find({ owner: res.locals.userId }, 'number customer.displayName date', function (err, obj) {
 
-  Invoice.find({ owner: res.locals.userId }, 'number customer items', function (err, obj) {
-
-    if (err) return res.status(500).json({ "error": "Something went wrong" });
-    if (!obj) return res.status(404).json({ "error": "No invoices were found" });
+    if (err) return res.status(500).json({ 'error': 'Something went wrong' });
+    if (!obj) return res.status(404).json({ 'error': 'No invoices were found' });
 
     return res.status(200).send(obj);
   });
@@ -33,11 +32,13 @@ router.get('/', isAuthorized, function (req, res) {
  * @param "items" in body 
  */
 router.post('/', isAuthorized, function (req, res) {
+  delete req.body.date;
+
   Invoice.create(req.body, function (err, invoice) {
     // Validation error
     if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
     // Internal error
-    if (err) return res.status(500).json({ "error": "Something went wrong" });
+    if (err) return res.status(500).json({ 'error': 'Something went wrong' });
 
     return res.status(200).send(invoice);
   });
@@ -48,23 +49,17 @@ router.post('/', isAuthorized, function (req, res) {
  * Change invoice details 
  * @param "id" in URL
  * @param "invoice"-everything
- * FIXME: Add date to the update fields
  */
 router.put('/:id', isAuthorized, function (req, res) {
+  delete req.body.date;
 
-  Invoice.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId },
-    {
-      items: req.body.items,
-      number: req.body.number,
-      customer: req.body.customer
-    }, { runValidators: true, new: true, select: '-owner' }, function (err, invoice) {
+  Invoice.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId }, req.body, { runValidators: true, new: true, select: '-owner' }, function (err, invoice) {
 
-      if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
+    if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
+    if (err) return res.status(500).send();
 
-      if (err) return res.status(500).send();
-
-      return res.status(200).send(invoice);
-    });
+    return res.status(200).send(invoice);
+  });
 });
 
 /**
@@ -74,7 +69,6 @@ router.put('/:id', isAuthorized, function (req, res) {
  * @param "id" in URI
  */
 router.delete('/:id', isAuthorized, function (req, res) {
-
   Invoice.findOneAndRemove({ _id: req.params.id, owner: res.locals.userId }, { select: 'owner' }, function (err, invoice) {
 
     if (err || !invoice) return res.status(500).send();
