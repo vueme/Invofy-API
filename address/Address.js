@@ -4,9 +4,12 @@ const Schema = mongoose.Schema;
 const User = require('../user/User');
 
 const AddressSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId
+  },
+
   displayName: {
     type: String,
-    unique: true,
     required: true,
     trim: true
   },
@@ -58,7 +61,6 @@ const AddressSchema = new Schema({
 
   owner: {
     type: String,
-    required: true,
     trim: true
   }
 }, {

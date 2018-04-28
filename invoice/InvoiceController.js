@@ -17,7 +17,7 @@ router.get('/', isAuthorized, function (req, res) {
   Invoice.find({ owner: res.locals.userId }, 'number customer.displayName date', function (err, obj) {
 
     if (err) return res.status(500).json({ 'error': 'Something went wrong' });
-    if (!obj) return res.status(404).json({ 'error': 'No invoices were found' });
+    if (obj.length == 0) return res.status(404).json({ 'error': 'No invoices were found' });
 
     return res.status(200).send(obj);
   });
@@ -34,13 +34,29 @@ router.get('/', isAuthorized, function (req, res) {
 router.post('/', isAuthorized, function (req, res) {
   delete req.body.date;
 
-  Invoice.create(req.body, function (err, invoice) {
-    // Validation error
-    if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
-    // Internal error
-    if (err) return res.status(500).json({ 'error': 'Something went wrong' });
+  if (!req.body.customer) return res.status(400).json({ 'error': 'Customer field is required' });
 
-    return res.status(200).send(invoice);
+  let addressFields = 'displayName customer addr1 addr2 post city country ref1 ref2 -_id';
+
+  Address.findOne({ _id: req.body.customer, owner: res.locals.userId }, addressFields, function (err, obj) {
+    if (err || !obj) return res.status(500).json({ 'error': 'Something went wrong' });
+
+    let invoice = new Invoice({
+      _id: mongoose.Types.ObjectId(),
+      number: req.body.number,
+      customer: obj,
+      items: req.body.items,
+      owner: res.locals.userId,
+    });
+
+    invoice.save(function (err) {
+      // Validation error
+      if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
+      // Internal error
+      if (err) return res.status(500).json({ 'error': 'Something went wrong' });
+
+      return res.status(200).send(invoice);
+    });
   });
 });
 
@@ -48,7 +64,6 @@ router.post('/', isAuthorized, function (req, res) {
  * [PROTECTED]
  * Change invoice details 
  * @param "id" in URL
- * @param "invoice"-everything
  */
 router.put('/:id', isAuthorized, function (req, res) {
   delete req.body.date;

@@ -2,10 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const User = require('../user/User');
-const InvoiceAddress = require('./InvoiceAddress');
+const Address = require('../address/Address');
+//const InvoiceAddress = require('./InvoiceAddress');
 const Item = require('./Item');
 
 const InvoiceSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId
+  },
+
   number: {
     type: Number,
     required: true,
@@ -13,7 +18,7 @@ const InvoiceSchema = new Schema({
   },
 
   customer: {
-    type: InvoiceAddress.schema,
+    type: Address.schema,
     required: true,
     trim: true
   },
