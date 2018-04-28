@@ -67,7 +67,9 @@ router.post('/', isAuthorized, function (req, res) {
  * @param "id" in URL
  */
 router.put('/:id', isAuthorized, function (req, res) {
+  delete req.body._id;
   delete req.body.date;
+  delete req.body.owner;
 
   Invoice.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId }, req.body, { runValidators: true, new: true, select: '-owner' }, function (err, invoice) {
 
