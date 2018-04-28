@@ -17,7 +17,7 @@ const CompanySchema = new Schema({
   post: {
     type: String,
     default: '000-00',
-    require: true,
+    required: true,
     trim: true
   },
 
