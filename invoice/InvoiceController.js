@@ -33,6 +33,7 @@ router.get('/', isAuthorized, function (req, res) {
  */
 router.post('/', isAuthorized, function (req, res) {
   delete req.body.date;
+  delete req.body.owner;
 
   if (!req.body.customer) return res.status(400).json({ 'error': 'Customer field is required' });
 
