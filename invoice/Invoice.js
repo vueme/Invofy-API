@@ -8,12 +8,14 @@ const Item = require('./Item');
 const InvoiceSchema = new Schema({
   number: {
     type: Number,
-    required: true
+    required: true,
+    trim: true
   },
 
   customer: {
     type: InvoiceAddress.schema,
-    required: true
+    required: true,
+    trim: true
   },
 
   date: {
@@ -23,13 +25,15 @@ const InvoiceSchema = new Schema({
 
   owner: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
 
   items: {
     type: [Item.schema],
     validate: [hasAtLeastOneItem, 'needs to contain at least one object'],
-    required: true
+    required: true,
+    trim: true
   }
 }, {
     versionKey: false
