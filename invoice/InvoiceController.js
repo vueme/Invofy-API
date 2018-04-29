@@ -65,19 +65,43 @@ router.post('/', isAuthorized, function (req, res) {
  * [PROTECTED]
  * Change invoice details 
  * @param "id" in URL
+ * @TODO: Fix this mess.
  */
 router.put('/:id', isAuthorized, function (req, res) {
   delete req.body._id;
   delete req.body.date;
   delete req.body.owner;
 
-  Invoice.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId }, req.body, { runValidators: true, new: true, select: '-owner' }, function (err, invoice) {
+  // Address changed
+  if (mongoose.Types.ObjectId.isValid(req.body.customer)) {
+    let addressFields = 'displayName customer addr1 addr2 post city country ref1 ref2 -_id';
 
-    if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
-    if (err) return res.status(500).send();
+    Address.findOne({ _id: req.body.customer, owner: res.locals.userId }, addressFields, function (err, obj) {
 
-    return res.status(200).send(invoice);
-  });
+      if (obj) req.body.customer = obj;
+
+
+      Invoice.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId }, req.body, { runValidators: true, new: true, select: '-owner' }, function (err, invoice) {
+
+        if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
+        if (err) return res.status(500).send();
+
+        return res.status(200).send(invoice);
+      });
+    });
+
+    // Same address
+  } else {
+    delete req.body.customer;
+
+    Invoice.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId }, req.body, { runValidators: true, new: true, select: '-owner' }, function (err, invoice) {
+
+      if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
+      if (err) return res.status(500).send();
+
+      return res.status(200).send(invoice);
+    });
+  }
 });
 
 /**
