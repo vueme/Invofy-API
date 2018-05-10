@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice Template</title>
+</head>
+
+<style>
+  @media print {
+    body,
+    page[size="A4"] {
+      margin: 0;
+      box-shadow: 0;
+    }
+  }
+
+  #middle-div {
+    margin-top: 20px;
+  }
+
+  #bottom-div {
+    margin-top: 50px;
+  }
+
+  body {
+    margin-top: -30px;
+    font-family: serif;
+  }
+
+  .faktura-header {
+    font-size: 40px;
+    letter-spacing: 25px;
+    font-weight: bold;
+    color: lightgray;
+  }
+
+  .company-name {
+    font-size: 24px;
+    letter-spacing: 1px;
+    vertical-align: top;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td {
+    /*border: 1px solid #ccc;*/
+    padding: 2px;
+  }
+
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .italic {
+    font-style: italic;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .f-va {
+    vertical-align: top;
+  }
+
+  .f-bg {
+    font-size: 21px;
+  }
+
+  .f-17px {
+    font-size: 17px;
+  }
+
+  .f-16px {
+    font-size: 16px;
+  }
+
+  .b-left {
+    border-left: 1px solid gray;
+  }
+
+  .b-top {
+    border-top: 1px solid gray;
+  }
+
+  .b-right {
+    border-right: 1px solid gray;
+  }
+
+  .b-bottom {
+    border-bottom: 1px solid gray;
+  }
+
+  .b-full {
+    border: 1px solid gray;
+  }
+
+  .t-header {
+    background: lightgray;
+  }
+
+  .t-empty-row {
+    height: 22px;
+  }
+</style>
+
+<body>
+  <page size="A4">
+    <div id="top-div">
+      <p class="faktura-header">FAKTURA</p>
+      <table>
+        <tr>
+          <td class="company-name bold">{{ company.name }}</td>
+          <td width="38%">
+            <table>
+              <tr>
+                <td class="b-left b-top">Datum:</td>
+                <td class="center b-top b-right">{{ date }}</td>
+              </tr>
+              <tr>
+                <td class="b-left b-bottom">Faktura Nr:</td>
+                <td class="center b-bottom b-right">{{ number }}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="t-empty-row"></td>
+        </tr>
+        <tr>
+          <td class="bold italic f-bg">{{ company.addr1 }}</td>
+
+          <td rowspan="8" class="f-va f-16px">
+            {{ customer.customer }}
+            <br> {{ customer.addr1 }} {{#if customer.addr2 }}
+            <br> {{ customer.addr2 }} {{/if}}
+            <br> {{ customer.post }} {{ customer.city }}
+            <br> {{ customer.country }}
+            <br> {{#if customer.ref1 }}
+            <br> {{ customer.ref1 }}{{/if}} {{#if customer.ref2 }}
+            <br> {{ customer.ref2 }}{{/if}}
+          </td>
+        </tr>
+        {{#if company.addr2 }}
+        <tr>
+          <td class="bold italic f-bg"> {{ company.addr2 }}</td>
+        </tr>
+        {{/if}}
+        <tr>
+          <td class="bold italic f-bg">{{ company.post }} {{ company.city }}</td>
+        </tr>
+        <tr>
+          <td class="bold italic f-bg">{{ company.country}}</td>
+        </tr>
+        <tr>
+          <td class="t-empty-row"></td>
+        </tr>
+        <tr>
+          <td>Ägare: {{ company.holder }}</td>
+        </tr>
+        <tr>
+          <td>Telefon: {{ company.phone }}</td>
+        </tr>
+        <tr>
+          <td>Org. nr: {{ company.org }}</td>
+        </tr>
+        <tr>
+          <td>Företaget har F-skattebevis</td>
+        </tr>
+      </table>
+    </div>
+    <div id="middle-div">
+      <table class>
+        <tr class="t-header">
+          <th class="b-full" width="48%">Beskrivning</th>
+          <th class="b-full" width="10%">Antal</th>
+          <th class="b-full" width="16%">Belopp</th>
+          <th class="b-full" width="26%">Summa</th>
+        </tr>
+        {{#each items}}
+        <tr class="t-empty-row">
+          <td class="b-left b-bottom b-right t-empty-row">{{ description }}</td>
+          <td class="b-bottom b-right center">{{ amount }}</td>
+          <td class="b-bottom b-right center">{{ price }} {{#if price}}kr{{/if}}</td>
+          <td class="b-right b-bottom center">{{ sum }} {{#if sum}}kr{{/if}}</td>
+        </tr>
+        {{/each}}
+        <tr>
+          <td colspan="2"></td>
+          <td class="bold center">Summa</td>
+          <td class="b-full bold center">{{ grandTotal }} kr</td>
+        </tr>
+      </table>
+    </div>
+    <div id="bottom-div">
+      <table>
+        <tr>
+          <td>Oss tillhandla: 30 dagar</td>
+        </tr>
+        <tr>
+          <td>Betalningsvilkor: 30 dagar netto</td>
+        </tr>
+        <tr>
+          <td>Betalning sker till konto: {{ company.bankacc }}</td>
+        </tr>
+      </table>
+    </div>
+  </page>
+</body>
+
+</html>

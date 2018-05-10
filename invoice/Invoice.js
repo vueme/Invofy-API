@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const User = require('../user/User');
 const Address = require('../address/Address');
-//const InvoiceAddress = require('./InvoiceAddress');
 const Item = require('./Item');
+const Company = require('../company/Company');
 
 const InvoiceSchema = new Schema({
   _id: {

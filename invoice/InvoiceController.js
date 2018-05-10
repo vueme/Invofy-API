@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const isAuthorized = require('../middleware/AuthMiddleware');
+const { getCompanyData, getInvoiceData } = require('./middleware/InvoiceMiddleware');
+var fs = require('fs');
+var pdf = require('dynamic-html-pdf');
 
 router.use(bodyParser.json());
 
@@ -21,7 +24,6 @@ router.get('/', isAuthorized, function (req, res) {
 
     return res.status(200).send(obj);
   });
-
 });
 
 /**
@@ -34,7 +36,6 @@ router.get('/', isAuthorized, function (req, res) {
 router.post('/', isAuthorized, function (req, res) {
   delete req.body.date;
   delete req.body.owner;
-
   if (!req.body.customer) return res.status(400).json({ 'error': 'Customer field is required' });
 
   let addressFields = 'displayName customer addr1 addr2 post city country ref1 ref2 -_id';
@@ -47,7 +48,7 @@ router.post('/', isAuthorized, function (req, res) {
       number: req.body.number,
       customer: obj,
       items: req.body.items,
-      owner: res.locals.userId,
+      owner: res.locals.userId
     });
 
     invoice.save(function (err) {
@@ -77,9 +78,7 @@ router.put('/:id', isAuthorized, function (req, res) {
     let addressFields = 'displayName customer addr1 addr2 post city country ref1 ref2 -_id';
 
     Address.findOne({ _id: req.body.customer, owner: res.locals.userId }, addressFields, function (err, obj) {
-
       if (obj) req.body.customer = obj;
-
 
       Invoice.findOneAndUpdate({ _id: req.params.id, owner: res.locals.userId }, req.body, { runValidators: true, new: true, select: '-owner' }, function (err, invoice) {
 
@@ -117,6 +116,38 @@ router.delete('/:id', isAuthorized, function (req, res) {
 
     return res.status(200).send();
   });
+});
+
+/**
+ * Generate PDF invoice from DB by ID
+ */
+router.get('/pdf/:id', isAuthorized, getCompanyData, getInvoiceData, function (req, res) {
+  const html = fs.readFileSync('./invoice/template/template.html', 'utf8');
+
+  let invoice = res.locals.invoice;
+  invoice.company = res.locals.company;
+
+  var options = {
+    format: 'A4',
+    orientation: 'portrait',
+    border: '20mm'
+  };
+
+  var document = {
+    type: 'buffer',
+    template: html,
+    context: invoice
+  };
+
+  pdf.create(document, options)
+    .then(pdf => {
+      //res.setHeader('Content-disposition', 'attachment; filename=' + 'test.pdf');
+      res.setHeader('Content-type', 'application/pdf');
+      res.send(pdf);
+    })
+    .catch(error => {
+      return res.status(500).send({ 'error': 'Something went wrong' });
+    });
 });
 
 module.exports = router;
