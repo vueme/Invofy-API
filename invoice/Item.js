@@ -4,23 +4,21 @@ const Schema = mongoose.Schema;
 const ItemSchema = new Schema({
   description: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
 
   amount: {
     type: Number,
-    required: true
+    required: true,
+    trim: true
   },
 
   price: {
     type: Number,
-    required: true
-  },
-
-  sum: {
-    type: Number,
-    required: true
-  },
+    required: true,
+    trim: true
+  }
 },
   {
     _id: false,

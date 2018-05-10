@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const isAuthorized = require('../middleware/AuthMiddleware');
-
 const User = require('../user/User');
 
 router.use(bodyParser.json());
@@ -25,13 +24,19 @@ router.get('/', isAuthorized, function (req, res) {
  * Updates company object
  */
 router.put('/', isAuthorized, function (req, res) {
-  User.findByIdAndUpdate(res.locals.userId, { $set: { company: req.body } }, { new: true }, function (err, obj) {
+  let options = {
+    runValidators: true,
+    new: true,
+    select: 'company -_id'
+  };
+
+  User.findByIdAndUpdate(res.locals.userId, { $set: { company: req.body } }, options, function (err, obj) {
     // Validation error
     if (err && err.name == 'ValidationError') return res.status(400).json(err.message);
     // Internal error
     if (err) return res.status(500).send();
 
-    return res.status(200).send();
+    return res.status(200).send(obj.company);
   });
 });
 

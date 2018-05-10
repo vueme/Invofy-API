@@ -2,34 +2,43 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const User = require('../user/User');
-const InvoiceAddress = require('./InvoiceAddress');
+const Address = require('../address/Address');
 const Item = require('./Item');
+const Company = require('../company/Company');
 
 const InvoiceSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId
+  },
+
   number: {
     type: Number,
-    required: true
+    required: true,
+    trim: true
   },
 
   customer: {
-    type: InvoiceAddress.schema,
-    required: true
+    type: Address.schema,
+    required: true,
+    trim: true
+  },
+
+  date: {
+    type: Date,
+    default: Date.now
   },
 
   owner: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
 
   items: {
     type: [Item.schema],
     validate: [hasAtLeastOneItem, 'needs to contain at least one object'],
-    required: true
-  },
-
-  created: {
-    type: Date,
-    default: Date.now
+    required: true,
+    trim: true
   }
 }, {
     versionKey: false
