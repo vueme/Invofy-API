@@ -4,8 +4,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const isAuthorized = require('../middleware/AuthMiddleware');
 const { getCompanyData, getInvoiceData } = require('./middleware/InvoiceMiddleware');
-var fs = require('fs');
-var pdf = require('dynamic-html-pdf');
+const fs = require('fs');
+//const pdf = require('dynamic-html-pdf');
+const path = require('path');
+const pdf = require('html-pdf');
+const hb = require('handlebars');
 
 router.use(bodyParser.json());
 
@@ -64,7 +67,7 @@ router.post('/', isAuthorized, function (req, res) {
 
 /**
  * [PROTECTED]
- * Change invoice details 
+ * Change invoice details
  * @param "id" in URL
  * @TODO: Fix this mess.
  */
@@ -122,31 +125,18 @@ router.delete('/:id', isAuthorized, function (req, res) {
  * Generate PDF invoice from DB by ID
  */
 router.get('/pdf/:id', isAuthorized, getCompanyData, getInvoiceData, function (req, res) {
-  const html = fs.readFileSync('./invoice/template/template.html', 'utf8');
+    const source = fs.readFileSync(path.join(__dirname, '/template/template.html'), 'utf8');
 
-  let invoice = res.locals.invoice;
-  invoice.company = res.locals.company;
+    let invoice = res.locals.invoice;
+    invoice.company = res.locals.company;
 
-  var options = {
-    format: 'A4',
-    orientation: 'portrait',
-    border: '20mm'
-  };
+    const template = hb.compile(source);
+    const html = template(invoice);
 
-  var document = {
-    type: 'buffer',
-    template: html,
-    context: invoice
-  };
-
-  pdf.create(document, options)
-    .then(pdf => {
-      //res.setHeader('Content-disposition', 'attachment; filename=' + 'test.pdf');
-      res.setHeader('Content-type', 'application/pdf');
-      res.send(pdf);
-    })
-    .catch(error => {
-      return res.status(500).send({ 'error': 'Something went wrong' });
+    pdf.create(html).toBuffer(function(err, buffer){
+        res.setHeader('Content-disposition', 'attachment; filename=' + 'test.pdf');
+        res.setHeader('Content-type', 'application/pdf');
+        res.send(buffer);
     });
 });
 

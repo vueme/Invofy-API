@@ -10,102 +10,99 @@
   @media print {
     body,
     page[size="A4"] {
-      margin: 0;
+      margin: 2.5cm;
       box-shadow: 0;
+      letter-spacing: 0.4px;
     }
-  }
 
-  #middle-div {
-    margin-top: 20px;
-  }
+    #middle-div {
+      margin-top: 20px;
+    }
 
-  #bottom-div {
-    margin-top: 50px;
-  }
+    #bottom-div {
+      margin-top: 50px;
+    }
 
-  body {
-    margin-top: -30px;
-    font-family: serif;
-  }
+    .faktura-header {
+      margin-top: -10px;
+      font-size: 40px;
+      letter-spacing: 25px;
+      font-weight: bold;
+      color: lightgray;
+    }
 
-  .faktura-header {
-    font-size: 40px;
-    letter-spacing: 25px;
-    font-weight: bold;
-    color: lightgray;
-  }
+    .company-name {
+      font-size: 24px;
+      letter-spacing: 1px;
+      vertical-align: top;
+    }
 
-  .company-name {
-    font-size: 24px;
-    letter-spacing: 1px;
-    vertical-align: top;
-  }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
 
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-  td {
-    /*border: 1px solid #ccc;*/
-    padding: 2px;
-  }
+    td {
+      /*border: 1px solid #ccc;*/
+      padding: 2px;
+    }
 
 
-  .bold {
-    font-weight: bold;
-  }
+    .bold {
+      font-weight: bold;
+    }
 
-  .italic {
-    font-style: italic;
-  }
+    .italic {
+      font-style: italic;
+    }
 
-  .center {
-    text-align: center;
-  }
+    .center {
+      text-align: center;
+    }
 
-  .f-va {
-    vertical-align: top;
-  }
+    .f-va {
+      vertical-align: top;
+    }
 
-  .f-bg {
-    font-size: 21px;
-  }
+    .f-bg {
+      font-size: 21px;
+    }
 
-  .f-17px {
-    font-size: 17px;
-  }
+    .f-17px {
+      font-size: 17px;
+    }
 
-  .f-16px {
-    font-size: 16px;
-  }
+    .f-16px {
+      font-size: 16px;
+    }
 
-  .b-left {
-    border-left: 1px solid gray;
-  }
+    .b-left {
+      border-left: 1px solid gray;
+    }
 
-  .b-top {
-    border-top: 1px solid gray;
-  }
+    .b-top {
+      border-top: 1px solid gray;
+    }
 
-  .b-right {
-    border-right: 1px solid gray;
-  }
+    .b-right {
+      border-right: 1px solid gray;
+    }
 
-  .b-bottom {
-    border-bottom: 1px solid gray;
-  }
+    .b-bottom {
+      border-bottom: 1px solid gray;
+    }
 
-  .b-full {
-    border: 1px solid gray;
-  }
+    .b-full {
+      border: 1px solid gray;
+    }
 
-  .t-header {
-    background: lightgray;
-  }
+    .t-header {
+      background: lightgray;
+    }
 
-  .t-empty-row {
-    height: 22px;
+    .t-empty-row {
+      height: 22px;
+    }
   }
 </style>
 
@@ -133,7 +130,7 @@
           <td colspan="2" class="t-empty-row"></td>
         </tr>
         <tr>
-          <td class="bold italic f-bg">{{ company.addr1 }}</td>
+          <td class="bold f-bg">{{ company.addr1 }}</td>
 
           <td rowspan="8" class="f-va f-16px">
             {{ customer.customer }}
@@ -148,14 +145,14 @@
         </tr>
         {{#if company.addr2 }}
         <tr>
-          <td class="bold italic f-bg"> {{ company.addr2 }}</td>
+          <td class="bold f-bg"> {{ company.addr2 }}</td>
         </tr>
         {{/if}}
         <tr>
-          <td class="bold italic f-bg">{{ company.post }} {{ company.city }}</td>
+          <td class="bold f-bg">{{ company.post }} {{ company.city }}</td>
         </tr>
         <tr>
-          <td class="bold italic f-bg">{{ company.country}}</td>
+          <td class="bold f-bg">{{ company.country}}</td>
         </tr>
         <tr>
           <td class="t-empty-row"></td>
